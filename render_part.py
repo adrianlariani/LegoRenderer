@@ -9,8 +9,11 @@ def import_model(model_file, parts_dir):
     try:
         bpy.ops.import_scene.importldraw(filepath=model_file,
                                          ldrawPath=os.path.abspath(os.path.join(parts_dir, os.pardir)),
-                                         importCameras=False, positionOnGround=False,
-                                         resPrims="Standard", addEnvironment=False)
+                                         importCameras=False,
+                                         positionOnGround=False,
+                                         resPrims="Standard",
+                                         addEnvironment=False,
+                                         useLogoStuds = True)
         return True
     except:
         return False
@@ -39,6 +42,14 @@ def change_color(colors: str, colors_dict: dict):
             for mat in child.material_slots:
                 if "_4_" in mat.name:
                     material = mat.material
+
+    if "_4_" not in material.name:
+        select_all_objects()
+        try:
+            selected_object = bpy.context.selected_objects[1]
+            material = selected_object.active_material
+        except:
+            pass
 
     material.use_nodes = True
 
@@ -77,13 +88,23 @@ def change_color(colors: str, colors_dict: dict):
 
 
 def setup_piece(colors: str, colors_dict):
+    for o in bpy.context.scene.objects:
+        if o.type == 'MESH' and "light" in o.name:
+            o.select_set(True)
+        else:
+            o.select_set(False)
+    bpy.ops.object.delete()
+
     change_color(colors=colors, colors_dict=colors_dict)
 
+    set_correct_rotation()
+
     select_camera()
+    bpy.context.object.data.lens = 50
 
-    bpy.context.object.rotation_euler[0] = random.uniform((-math.pi / 4), (math.pi / 4))
+    bpy.context.object.rotation_euler[0] = random.uniform((-math.pi / 5), (math.pi / 5))
 
-    bpy.context.object.rotation_euler[1] = random.uniform((-math.pi / 4), (math.pi / 4))
+    bpy.context.object.rotation_euler[1] = random.uniform((-math.pi / 5), (math.pi / 5))
 
     try:
         for obj in bpy.context.scene.objects:
@@ -101,6 +122,11 @@ def setup_piece(colors: str, colors_dict):
     select_all_objects()
     bpy.ops.view3d.camera_to_view_selected()
 
+    select_camera()
+
+    bpy.context.object.data.lens_unit = 'MILLIMETERS'
+    bpy.context.object.data.lens = random.randrange(35, 48, 1)
+
     select_plane()
     bpy.context.object.location[2] = get_lowest_pt()
 
@@ -108,11 +134,11 @@ def setup_piece(colors: str, colors_dict):
 
     bpy.context.object.location[0] = random.choice([-0.5, 0.5])
     bpy.context.object.location[1] = random.choice([-0.5, 0.5])
-    bpy.context.object.data.energy = random.uniform(0.5, 6)
+    bpy.context.object.data.energy = random.uniform(10, 70)
 
 
 def render_image(part_id, output_dir, num_renders_each, number=False):
-    bpy.context.scene.cycles.samples = 32
+    bpy.context.scene.cycles.samples = 4
     if number:
         print(f"Rendering Part ID: {part_id}  |  {number} / {num_renders_each}")
         bpy.context.scene.render.filepath = os.path.join(output_dir + "/" + part_id,
@@ -122,6 +148,82 @@ def render_image(part_id, output_dir, num_renders_each, number=False):
         bpy.context.scene.render.filepath = os.path.join(output_dir + "/" + part_id, (part_id + ".jpg"))
 
     bpy.ops.render.render(write_still=True)
+
+
+def set_correct_rotation():
+    import bpy
+    from bpy import context
+    import numpy as np
+    import itertools
+
+    # multiply 3d coord list by matrix
+    def np_matmul_coords(coords, matrix, space=None):
+        M = (space @ matrix @ space.inverted()
+             if space else matrix).transposed()
+        ones = np.ones((coords.shape[0], 1))
+        coords4d = np.hstack((coords, ones))
+
+        return np.dot(coords4d, M)[:, :-1]
+        return coords4d[:, :-1]
+
+    # get the global coordinates of all object bounding box corners
+    coords = np.vstack(
+        tuple(np_matmul_coords(np.array(o.bound_box), o.matrix_world.copy())
+              for o in
+              context.scene.objects
+              if o.type == 'MESH' and o.name != "Plane"
+              )
+    )
+    # bottom front left (all the mins)
+    bfl = coords.min(axis=0)
+    # top back right
+    tbr = coords.max(axis=0)
+    G = np.array((bfl, tbr)).T
+    # bound box coords ie the 8 combinations of bfl tbr.
+    bbc = [i for i in itertools.product(*G)]
+    import math
+
+    coord = np.array(bbc)[0]
+    x = coord[0]
+    y = coord[1]
+    z = coord[2]
+
+    for coordinate in np.array(bbc):
+        if x == coordinate[0] and y == coordinate[1]:
+            z_axis = math.dist([z], [coordinate[2]])
+        if x == coordinate[0] and z == coordinate[2]:
+            y_axis = math.dist([y], [coordinate[1]])
+        if z == coordinate[2] and y == coordinate[1]:
+            x_axis = math.dist([x], [coordinate[0]])
+
+    xy = x_axis * y_axis
+    zx = z_axis * x_axis
+    yz = y_axis * z_axis
+    sides = [xy, zx, yz]
+
+    try:
+        for obj in bpy.context.scene.objects:
+            if obj.type == "EMPTY":
+                obj.select_set(True)
+            else:
+                obj.select_set(False)
+        bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
+    except:
+        for o in bpy.context.scene.objects:
+            if o.type == "MESH" and "Plane" not in o.name:
+                o.select_set(True)
+            else:
+                o.select_set(False)
+        bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
+
+    if max(sides) == xy:
+        pass
+    if max(sides) == zx:
+        bpy.context.object.rotation_euler[0] = math.pi / 2
+    if max(sides) == yz:
+        bpy.context.object.rotation_euler[1] = math.pi / 2
+
+    bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
 
 
 def main():

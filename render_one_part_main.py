@@ -21,7 +21,7 @@ def main():
                      model_files=os.path.abspath("complete/ldraw/parts"),
                      colors_rgb=os.path.abspath("colors_rgb.csv"),
                      ldraw_import=os.path.abspath("importldraw.zip"),
-                     output_location=os.path.abspath("Renders"),
+                     output_location=os.path.abspath("D://Renders"),
                      part_id="122c02",  # Put Part Bricklink id here
                      color="Trans-Green")  # Put color of brick here, colors can be found in colors_rgb.csv
 

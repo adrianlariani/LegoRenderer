@@ -24,18 +24,22 @@ def load_colors(color_list_filepath):
 
 def init(ldraw_import_filepath):
     print("Initializing.....")
-
-    bpy.ops.preferences.addon_install(overwrite=True, filepath=ldraw_import_filepath)
+    import addon_utils
+    if not addon_utils.check("io_scene_importldraw")[0]:
+        bpy.ops.preferences.addon_install(overwrite=True, filepath=ldraw_import_filepath)
 
     for o in bpy.context.scene.objects:
         o.select_set(True)
     bpy.ops.object.delete()
-    bpy.context.scene.render.resolution_x = 128
-    bpy.context.scene.render.resolution_y = 128
+    bpy.context.scene.render.resolution_x = 256
+    bpy.context.scene.render.resolution_y = 256
 
     bpy.context.scene.render.engine = 'CYCLES'
+    bpy.context.preferences.addons[
+        "cycles"
+    ].preferences.compute_device_type = "CUDA"
     bpy.context.scene.cycles.device = 'GPU'
-    bpy.context.scene.cycles.samples = 64
+    bpy.context.scene.cycles.samples = 4
     bpy.context.scene.render.image_settings.file_format = 'JPEG'
     bpy.context.scene.cycles.use_adaptive_sampling = True
     bpy.context.scene.cycles.adaptive_threshold = 1
@@ -48,9 +52,12 @@ def init(ldraw_import_filepath):
     bpy.context.scene.camera = bpy.data.objects["Camera"]
     bpy.context.object.data.clip_start = 1e-06
 
-    bpy.ops.object.light_add(type='AREA', align='WORLD', location=(-0.5, 0.5, 0.5),
+    bpy.ops.object.light_add(type='SPOT', align='WORLD', location=(0, 0, 0.5),
                              scale=(0.1, 0.1, 1))
-
+    bpy.context.object.data.shadow_soft_size = 1
+    bpy.context.object.scale[0] = 4
+    bpy.context.object.scale[1] = 4
+    bpy.context.object.visible_glossy = False
     bpy.context.object.data.energy = 5
 
     bpy.ops.mesh.primitive_plane_add(location=(0, 0, 0),

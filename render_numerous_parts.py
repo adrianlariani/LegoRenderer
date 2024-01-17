@@ -17,20 +17,24 @@ def main():
     num_renders_each = int(argv[12])
 
     init(import_ldraw)
+    models_failed = []
     with open(models_csv, 'r', encoding="utf-8") as file:
         csvfile = csv.reader(file)
         for i in range(start_index + 1):
             next(csvfile)
         for line in csvfile:
-
             part_id = line[1]
             reset_delete()
-            import_model(os.path.join(parts_dir, part_id + ".dat"), parts_dir)
+            valid = import_model(os.path.join(parts_dir, part_id + ".dat"), parts_dir)
+            if not valid:
+                models_failed.append(part_id)
+                continue
             setup_render_scene()
             for j in range(1, num_renders_each + 1):
                 setup_piece(colors=line[2], colors_dict=colors_dict)
                 render_image(part_id=part_id, output_dir=output_dir, num_renders_each=num_renders_each, number=j)
             if str(end_index) == line[0]:
+                print(f"Models that failed: {models_failed}")
                 print("Ending....")
                 return
 
