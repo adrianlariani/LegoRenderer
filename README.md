@@ -24,7 +24,7 @@ This project automates the rendering of high-quality images for Lego parts, maki
    ```
 
 6. Run Setup Script
-    Execute setup.py to configure dependencies and download model info
+    Execute ```setup.py``` to configure dependencies and download model info
 
 7. Configure the Blender Path and Output Location
 
@@ -55,8 +55,8 @@ render_one_model(
 )
 ```
 #### Key Parameters:
-- ```part_id```: Set this to the Bricklink ID of the part you want to render. The available parts are listed in confirmed_models.csv
-- ```color```: Specify the desired color. The available colors are listed in colors_rgb.csv.
+- ```part_id```: Set this to the Bricklink ID of the part you want to render. The available parts are listed in ```confirmed_models.csv```.
+- ```color```: Specify the desired color. The available colors are listed in ```colors_rgb.csv```.
 
 ### Render Multiple Parts
 To render multiple Lego parts with specific parameters, modify the function call in ```render_multiple_parts_main.py```:
@@ -75,7 +75,7 @@ render_many_models(
 )
 ```
 #### Key Parameters:
-- ```start_index``` and ```end_index```: Define the range of parts in confirmed_models.csv to render.
+- ```start_index``` and ```end_index```: Define the range of parts in ```confirmed_models.csv``` to render.
 - ```num_renders_each```: Set the number of renders per piece for the specified range.
 
 ## Files and Resources
