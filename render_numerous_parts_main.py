@@ -24,11 +24,11 @@ def main():
                        model_files=os.path.abspath("complete/ldraw/parts"),
                        colors_rgb=os.path.abspath("colors_rgb.csv"),
                        ldraw_import=os.path.abspath("importldraw.zip"),
-                       output_location=os.path.abspath("D:\\Renders"),
+                       output_location=os.path.abspath("C:\\Renders"),
                        confirmed_models_csv=os.path.abspath("confirmed_models.csv"),
-                       start_index=1087,  # Index to start on, indexes of pieces in confirmed_models.csv
-                       end_index=1200,  # Index to end on, indexes of pieces in confirmed_models.csv
-                       num_renders_each=200)  # Number of renders to produce for each piece
+                       start_index=1,  # Index to start on, indexes of pieces in confirmed_models.csv
+                       end_index=2,  # Index to end on, indexes of pieces in confirmed_models.csv
+                       num_renders_each=5)  # Number of renders to produce for each piece
 
 
 if __name__ == "__main__":
