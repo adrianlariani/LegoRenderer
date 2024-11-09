@@ -1,4 +1,3 @@
-import importlib
 import subprocess
 import sys
 import requests
@@ -7,13 +6,13 @@ import zipfile
 from tqdm import tqdm
 
 
-def install_and_import(package):
+def install_requirements(requirements_file="requirements.txt"):
+    """Install packages listed in the requirements.txt file."""
     try:
-        importlib.import_module(package)
-    except ImportError:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-    finally:
-        globals()[package] = importlib.import_module(package)
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", requirements_file])
+    except subprocess.CalledProcessError as e:
+        print(f"Error installing requirements: {e}")
+        sys.exit(1)
 
 
 def download_file(url, filename):
@@ -38,9 +37,7 @@ def unzip_file(zip_path, extract_to):
 
 
 def main():
-    packages = ["requests", "tqdm", "beautifulsoup4", "numpy"]
-    for package in packages:
-        install_and_import(package)
+    install_requirements()
 
     url1 = "https://library.ldraw.org/library/updates/complete.zip"
     url2 = "https://github.com/TobyLobster/ImportLDraw/releases/download/v1.2.0/importldraw1.2.0.zip"
