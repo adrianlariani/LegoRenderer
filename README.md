@@ -5,7 +5,6 @@ This project automates the rendering of high-quality images for Lego parts, maki
 ![Lego Part Example 1](./assets/3001.jpg)
 ![Lego Part Example 2](./assets/30029.jpg)
 ![Lego Part Example 2](./assets/2340.jpg)
-![Lego Part Example 4](./assets/4504.jpg)
 
 ## Setup Instructions
 
