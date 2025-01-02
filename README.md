@@ -17,11 +17,16 @@ This project automates the rendering of high-quality images for Lego parts, maki
 
     Download and install [Blender 3.6 LTS](https://www.blender.org/download/lts/3-6/).
     Note the path where Blender is installed (e.g., C:\Program Files\Blender Foundation\Blender 3.6\blender.exe).
+   
+4. Install Requirements
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-3. Run Setup Script
-    Execute setup.py to configure dependencies
+6. Run Setup Script
+    Execute ```setup.py``` to configure dependencies and download model info
 
-4. Configure the Blender Path and Output Location
+7. Configure the Blender Path and Output Location
 
    - Open ```render_one_part_main.py``` or ```render_multiple_parts_main.py```.
    - Update the blender argument in the render_one_model and render_many_models functions to match your Blender path:
@@ -50,8 +55,8 @@ render_one_model(
 )
 ```
 #### Key Parameters:
-- ```part_id```: Set this to the Bricklink ID of the part you want to render. The available parts are listed in confirmed_models.csv
-- ```color```: Specify the desired color. The available colors are listed in colors_rgb.csv.
+- ```part_id```: Set this to the Bricklink ID of the part you want to render. The available parts are listed in ```confirmed_models.csv```.
+- ```color```: Specify the desired color. The available colors are listed in ```colors_rgb.csv```.
 
 ### Render Multiple Parts
 To render multiple Lego parts with specific parameters, modify the function call in ```render_multiple_parts_main.py```:
@@ -70,7 +75,7 @@ render_many_models(
 )
 ```
 #### Key Parameters:
-- ```start_index``` and ```end_index```: Define the range of parts in confirmed_models.csv to render.
+- ```start_index``` and ```end_index```: Define the range of parts in ```confirmed_models.csv``` to render.
 - ```num_renders_each```: Set the number of renders per piece for the specified range.
 
 ## Files and Resources
