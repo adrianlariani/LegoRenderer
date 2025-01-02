@@ -32,59 +32,63 @@ def change_color(colors: str, colors_dict: dict):
 
     selected_object = bpy.context.selected_objects[0]
 
+    materials = set()
+
     material = selected_object.active_material
 
     for mat in selected_object.material_slots:
         if "_4_" in mat.name:
-            material = mat.material
+            materials.add(mat.material)
     if material is None:
         for child in selected_object.children:
             for mat in child.material_slots:
                 if "_4_" in mat.name:
-                    material = mat.material
+                    materials.add(mat.material)
 
     if "_4_" not in material.name:
         select_all_objects()
         try:
             selected_object = bpy.context.selected_objects[1]
-            material = selected_object.active_material
+            materials.add(selected_object.active_material)
         except:
             pass
+    for material in materials:
+        if material is None:
+            continue
+        material.use_nodes = True
 
-    material.use_nodes = True
+        for node in material.node_tree.nodes:
+            inputs = list(node.inputs)
+            if inputs[0].bl_label == "Color":
+                material.node_tree.nodes.remove(node)
+                break
 
-    for node in material.node_tree.nodes:
-        inputs = list(node.inputs)
-        if inputs[0].bl_label == "Color":
-            material.node_tree.nodes.remove(node)
-            break
+        select_all_objects()
 
-    select_all_objects()
-
-    group = material.node_tree.nodes.new("ShaderNodeGroup")
-    group.node_tree = bpy.data.node_groups['Lego Standard']
-
-    if "Chrome" in random_color:
-        group.node_tree = bpy.data.node_groups['Lego Chrome']
-    elif "Pearl" in random_color:
-        group.node_tree = bpy.data.node_groups['Lego Pearlescent']
-    elif "Trans" in random_color:
-        group.node_tree = bpy.data.node_groups['Lego Transparent']
-    elif "Speckle" in random_color:
-        group.node_tree = bpy.data.node_groups['Lego Speckle']
-    elif "Metal" in random_color:
-        group.node_tree = bpy.data.node_groups['Lego Metal']
-    elif "Glitter" in random_color:
-        group.node_tree = bpy.data.node_groups['Lego Glitter']
-    elif "Milky White" in random_color:
-        group.node_tree = bpy.data.node_groups['Lego Milky White']
-    else:
+        group = material.node_tree.nodes.new("ShaderNodeGroup")
         group.node_tree = bpy.data.node_groups['Lego Standard']
 
-    material.node_tree.links.new(material.node_tree.nodes[1].outputs[0], group.inputs[len(group.inputs) - 1])
-    material.node_tree.links.new(group.outputs[0], material.node_tree.nodes[0].inputs[0])
+        if "Chrome" in random_color:
+            group.node_tree = bpy.data.node_groups['Lego Chrome']
+        elif "Pearl" in random_color:
+            group.node_tree = bpy.data.node_groups['Lego Pearlescent']
+        elif "Trans" in random_color:
+            group.node_tree = bpy.data.node_groups['Lego Transparent']
+        elif "Speckle" in random_color:
+            group.node_tree = bpy.data.node_groups['Lego Speckle']
+        elif "Metal" in random_color:
+            group.node_tree = bpy.data.node_groups['Lego Metal']
+        elif "Glitter" in random_color:
+            group.node_tree = bpy.data.node_groups['Lego Glitter']
+        elif "Milky White" in random_color:
+            group.node_tree = bpy.data.node_groups['Lego Milky White']
+        else:
+            group.node_tree = bpy.data.node_groups['Lego Standard']
 
-    group.inputs["Color"].default_value = colors_dict[random_color]
+        material.node_tree.links.new(material.node_tree.nodes[1].outputs[0], group.inputs[len(group.inputs) - 1])
+        material.node_tree.links.new(group.outputs[0], material.node_tree.nodes[0].inputs[0])
+
+        group.inputs["Color"].default_value = colors_dict[random_color]
 
 
 def setup_piece(colors: str, colors_dict):
@@ -94,7 +98,6 @@ def setup_piece(colors: str, colors_dict):
         else:
             o.select_set(False)
     bpy.ops.object.delete()
-
     change_color(colors=colors, colors_dict=colors_dict)
 
     set_correct_rotation()
@@ -117,7 +120,7 @@ def setup_piece(colors: str, colors_dict):
         select_obj()
 
     bpy.context.object.rotation_euler[2] = random.uniform(0, (math.pi * 2))
-    bpy.context.object.rotation_euler[1] = random.choice([0, math.pi])
+    #bpy.context.object.rotation_euler[1] = random.choice([0, math.pi])
 
     select_all_objects()
     bpy.ops.view3d.camera_to_view_selected()
@@ -125,7 +128,7 @@ def setup_piece(colors: str, colors_dict):
     select_camera()
 
     bpy.context.object.data.lens_unit = 'MILLIMETERS'
-    bpy.context.object.data.lens = random.randrange(35, 48, 1)
+    bpy.context.object.data.lens = random.randrange(30, 40, 1)
 
     select_plane()
     bpy.context.object.location[2] = get_lowest_pt()
