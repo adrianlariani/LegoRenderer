@@ -13,7 +13,7 @@ def import_model(model_file, parts_dir):
                                          positionOnGround=False,
                                          resPrims="Standard",
                                          addEnvironment=False,
-                                         useLogoStuds = True)
+                                         useLogoStuds=True)
         return True
     except:
         return False
@@ -91,7 +91,7 @@ def change_color(colors: str, colors_dict: dict):
         group.inputs["Color"].default_value = colors_dict[random_color]
 
 
-def setup_piece(colors: str, colors_dict, camera_min_x_rot, camera_max_x_rot,  camera_min_y_rot,
+def setup_piece(colors: str, colors_dict, camera_min_x_rot, camera_max_x_rot, camera_min_y_rot,
                 camera_max_y_rot, camera_zoom_min, camera_zoom_max, flip_part, random_spin):
     for o in bpy.context.scene.objects:
         if o.type == 'MESH' and "light" in o.name:
@@ -106,9 +106,9 @@ def setup_piece(colors: str, colors_dict, camera_min_x_rot, camera_max_x_rot,  c
     select_camera()
     bpy.context.object.data.lens = 50
 
-    #bpy.context.object.rotation_euler[0] = random.uniform((-math.pi / 5), (math.pi / 5))
+    # bpy.context.object.rotation_euler[0] = random.uniform((-math.pi / 5), (math.pi / 5))
 
-    #bpy.context.object.rotation_euler[1] = random.uniform((-math.pi / 5), (math.pi / 5))
+    # bpy.context.object.rotation_euler[1] = random.uniform((-math.pi / 5), (math.pi / 5))
 
     bpy.context.object.rotation_euler[0] = random.uniform(camera_min_x_rot, camera_max_x_rot)
 
@@ -245,10 +245,17 @@ def main():
     output_dir = argv[8]
     part_id = argv[9]
     color = argv[10]
+    camera_x_rot = float(argv[11])
+    camera_y_rot = float(argv[12])
+    camera_zoom = float(argv[13])
+
     init(import_ldraw)
     import_model(os.path.join(parts_dir, part_id + ".dat"), parts_dir)
     setup_render_scene()
-    setup_piece(colors=color, colors_dict=colors_dict)
+    setup_piece(colors=color, colors_dict=colors_dict, camera_min_x_rot=camera_x_rot,
+                camera_max_x_rot=camera_x_rot, camera_min_y_rot=camera_y_rot,
+                camera_max_y_rot=camera_y_rot, camera_zoom_min=camera_zoom,
+                camera_zoom_max=camera_zoom, flip_part=False, random_spin=False)
     render_image(part_id=part_id, output_dir=output_dir, num_renders_each=1)
 
 
