@@ -6,7 +6,7 @@ from blender_scripts.run_blender import run_blender
 def render_many_models(blender, script, model_files, colors_rgb, ldraw_import, output_location,
                        confirmed_models_csv, start_index, end_index, num_renders_each, camera_min_x_rot,
                        camera_max_x_rot, camera_min_y_rot, camera_max_y_rot, camera_zoom_min,
-                       camera_zoom_max, flip_part, random_spin):
+                       camera_zoom_max, flip_part, random_spin, render_res_x, render_res_y):
     run_blender([blender,
                  "--background",
                  "--python", script,
@@ -26,7 +26,9 @@ def render_many_models(blender, script, model_files, colors_rgb, ldraw_import, o
                  str(camera_zoom_min),
                  str(camera_zoom_max),
                  str(int(flip_part)),
-                 str(int(random_spin))])
+                 str(int(random_spin)),
+                 str(render_res_x),
+                 str(render_res_y)])
 
 
 def main():
@@ -38,7 +40,7 @@ def main():
                        confirmed_models_csv=os.path.abspath("../assets/confirmed_models.csv"),
                        output_location=os.path.abspath("C:\\Renders"),
                        start_index=22,  # Index to start on, indexes of pieces in confirmed_models.csv
-                       end_index=112,  # Index to end on, indexes of pieces in confirmed_models.csv
+                       end_index=23,  # Index to end on, indexes of pieces in confirmed_models.csv
                        num_renders_each=10,  # Number of renders to produce for each piece
                        camera_min_x_rot=(-math.pi / 5),  # Minimum camera x rotation
                        camera_max_x_rot=(math.pi / 5),  # Maximum camera x rotation
@@ -47,7 +49,9 @@ def main():
                        camera_zoom_min=30,  # Minimum camera zoom
                        camera_zoom_max=40,  # Maximum camera zoom
                        flip_part=True,  # True to flip part upside down randomly, or False otherwise
-                       random_spin=True)  # True to spin part randomly on vertical axis, or False otherwise
+                       random_spin=True,  # True to spin part randomly on vertical axis, or False otherwise
+                       render_res_x=256,  # X direction render resolution
+                       render_res_y=256)  # Y direction render resolution
 
 
 if __name__ == "__main__":

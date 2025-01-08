@@ -23,7 +23,10 @@ def main():
     camera_zoom_max = float(argv[18])
     flip_part = bool(int(argv[19]))
     random_spin = bool(int(argv[20]))
-    init(import_ldraw)
+    render_res_x = int(argv[21])
+    render_res_y = int(argv[22])
+
+    init(import_ldraw, render_res_x, render_res_y)
     models_failed = []
     start_found = False
     with open(models_csv, 'r', encoding="utf-8") as file:

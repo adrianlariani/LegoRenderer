@@ -248,8 +248,10 @@ def main():
     camera_x_rot = float(argv[11])
     camera_y_rot = float(argv[12])
     camera_zoom = float(argv[13])
+    render_res_x = int(argv[14])
+    render_res_y = int(argv[15])
 
-    init(import_ldraw)
+    init(import_ldraw, render_res_x, render_res_y)
     import_model(os.path.join(parts_dir, part_id + ".dat"), parts_dir)
     setup_render_scene()
     setup_piece(colors=color, colors_dict=colors_dict, camera_min_x_rot=camera_x_rot,

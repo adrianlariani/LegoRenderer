@@ -22,7 +22,7 @@ def load_colors(color_list_filepath):
     return colors_dict
 
 
-def init(ldraw_import_filepath):
+def init(ldraw_import_filepath, render_res_x, render_res_y):
     print("Initializing.....")
     import addon_utils
     if not addon_utils.check("io_scene_importldraw")[0]:
@@ -31,8 +31,8 @@ def init(ldraw_import_filepath):
     for o in bpy.context.scene.objects:
         o.select_set(True)
     bpy.ops.object.delete()
-    bpy.context.scene.render.resolution_x = 256
-    bpy.context.scene.render.resolution_y = 256
+    bpy.context.scene.render.resolution_x = render_res_x
+    bpy.context.scene.render.resolution_y = render_res_y
 
     bpy.context.scene.render.engine = 'CYCLES'
     bpy.context.preferences.addons[

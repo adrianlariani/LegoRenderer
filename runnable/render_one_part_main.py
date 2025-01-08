@@ -4,7 +4,7 @@ from blender_scripts.run_blender import run_blender
 
 
 def render_one_model(blender, script, model_files, colors_rgb, ldraw_import, output_location, part_id, color,
-                     camera_x_rot, camera_y_rot, camera_zoom):
+                     camera_x_rot, camera_y_rot, camera_zoom, render_res_x, render_res_y):
     run_blender([blender,
                  "--background",
                  "--python", script,
@@ -17,7 +17,9 @@ def render_one_model(blender, script, model_files, colors_rgb, ldraw_import, out
                  color,
                  str(camera_x_rot),
                  str(camera_y_rot),
-                 str(camera_zoom)])
+                 str(camera_zoom),
+                 str(render_res_x),
+                 str(render_res_y)])
 
 
 def main():
@@ -31,7 +33,9 @@ def main():
                      color="Blue",  # Put color of brick here, colors can be found in colors_rgb.csv
                      camera_x_rot=(math.pi / 5),  # Camera x rotation
                      camera_y_rot=(math.pi / 5),  # Camera y rotation
-                     camera_zoom=30)  # Camera zoom
+                     camera_zoom=30,  # Camera zoom
+                     render_res_x=256,  # X direction render resolution
+                     render_res_y=256)  # Y direction render resolution
 
 
 
