@@ -91,7 +91,8 @@ def change_color(colors: str, colors_dict: dict):
         group.inputs["Color"].default_value = colors_dict[random_color]
 
 
-def setup_piece(colors: str, colors_dict):
+def setup_piece(colors: str, colors_dict, camera_min_x_rot, camera_max_x_rot,  camera_min_y_rot,
+                camera_max_y_rot, camera_zoom_min, camera_zoom_max, flip_part, random_spin):
     for o in bpy.context.scene.objects:
         if o.type == 'MESH' and "light" in o.name:
             o.select_set(True)
@@ -105,10 +106,13 @@ def setup_piece(colors: str, colors_dict):
     select_camera()
     bpy.context.object.data.lens = 50
 
-    bpy.context.object.rotation_euler[0] = random.uniform((-math.pi / 5), (math.pi / 5))
+    #bpy.context.object.rotation_euler[0] = random.uniform((-math.pi / 5), (math.pi / 5))
 
-    bpy.context.object.rotation_euler[1] = random.uniform((-math.pi / 5), (math.pi / 5))
+    #bpy.context.object.rotation_euler[1] = random.uniform((-math.pi / 5), (math.pi / 5))
 
+    bpy.context.object.rotation_euler[0] = random.uniform(camera_min_x_rot, camera_max_x_rot)
+
+    bpy.context.object.rotation_euler[1] = random.uniform(camera_min_y_rot, camera_max_y_rot)
     try:
         for obj in bpy.context.scene.objects:
             if obj.type == "EMPTY":
@@ -118,9 +122,10 @@ def setup_piece(colors: str, colors_dict):
         bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
     except:
         select_obj()
-
-    bpy.context.object.rotation_euler[2] = random.uniform(0, (math.pi * 2))
-    #bpy.context.object.rotation_euler[1] = random.choice([0, math.pi])
+    if random_spin:
+        bpy.context.object.rotation_euler[2] = random.uniform(0, (math.pi * 2))
+    if flip_part:
+        bpy.context.object.rotation_euler[1] = random.choice([0, math.pi])
 
     select_all_objects()
     bpy.ops.view3d.camera_to_view_selected()
@@ -128,7 +133,10 @@ def setup_piece(colors: str, colors_dict):
     select_camera()
 
     bpy.context.object.data.lens_unit = 'MILLIMETERS'
-    bpy.context.object.data.lens = random.randrange(30, 40, 1)
+    if camera_zoom_min != camera_zoom_max:
+        bpy.context.object.data.lens = random.randrange(camera_zoom_min, camera_zoom_max, 1)
+    else:
+        bpy.context.object.data.lens = camera_zoom_min
 
     select_plane()
     bpy.context.object.location[2] = get_lowest_pt()

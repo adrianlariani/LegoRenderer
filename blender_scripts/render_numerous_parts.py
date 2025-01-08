@@ -15,6 +15,15 @@ def main():
     start_index = int(argv[10])
     end_index = int(argv[11])
     num_renders_each = int(argv[12])
+    camera_min_x_rot = float(argv[13])
+    camera_max_x_rot = float(argv[14])
+    camera_min_y_rot = float(argv[15])
+    camera_max_y_rot = float(argv[16])
+    camera_zoom_min = float(argv[17])
+    camera_zoom_max = float(argv[18])
+    flip_part = bool(int(argv[19]))
+    random_spin = bool(int(argv[20]))
+
 
     init(import_ldraw)
     models_failed = []
@@ -31,7 +40,10 @@ def main():
                 continue
             setup_render_scene()
             for j in range(1, num_renders_each + 1):
-                setup_piece(colors=line[2], colors_dict=colors_dict)
+                setup_piece(colors=line[2], colors_dict=colors_dict, camera_min_x_rot=camera_min_x_rot,
+                            camera_max_x_rot=camera_max_x_rot, camera_min_y_rot=camera_min_y_rot,
+                            camera_max_y_rot=camera_max_y_rot, camera_zoom_min=camera_zoom_min,
+                            camera_zoom_max=camera_zoom_max, flip_part=flip_part, random_spin=random_spin)
                 render_image(part_id=part_id, output_dir=output_dir, num_renders_each=num_renders_each, number=j)
             if str(end_index) == line[0]:
                 print(f"Models that failed: {models_failed}")
