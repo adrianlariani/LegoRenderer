@@ -63,6 +63,10 @@ def init(ldraw_import_filepath):
     bpy.ops.mesh.primitive_plane_add(location=(0, 0, 0),
                                      scale=(2, 2, 1),
                                      rotation=(0, 0, 0))
+    bpy.ops.mesh.primitive_plane_add(location=(1, 0, 0), scale=(2, 2, 1), rotation=(0, math.pi / 2, 0))
+    bpy.ops.mesh.primitive_plane_add(location=(-1, 0, 0), scale=(2, 2, 1), rotation=(0, math.pi / 2, 0))
+    bpy.ops.mesh.primitive_plane_add(location=(0, 1, 0), scale=(2, 2, 1), rotation=(math.pi / 2, 0, 0))
+    bpy.ops.mesh.primitive_plane_add(location=(0, -1, 0), scale=(2, 2, 1), rotation=(math.pi / 2, 0, 0))
 
 
 def setup_render_scene():

@@ -35,7 +35,7 @@ def main():
                        model_files=os.path.abspath("../complete/ldraw/parts"),
                        colors_rgb=os.path.abspath("../assets/colors_rgb.csv"),
                        ldraw_import=os.path.abspath("../importldraw.zip"),
-                       confirmed_models_csv=os.path.abspath("../assets/top1000models.csv"),
+                       confirmed_models_csv=os.path.abspath("../assets/confirmed_models.csv"),
                        output_location=os.path.abspath("C:\\Renders"),
                        start_index=22,  # Index to start on, indexes of pieces in confirmed_models.csv
                        end_index=112,  # Index to end on, indexes of pieces in confirmed_models.csv
