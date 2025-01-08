@@ -23,15 +23,18 @@ def main():
     camera_zoom_max = float(argv[18])
     flip_part = bool(int(argv[19]))
     random_spin = bool(int(argv[20]))
-
-
     init(import_ldraw)
     models_failed = []
+    start_found = False
     with open(models_csv, 'r', encoding="utf-8") as file:
         csvfile = csv.reader(file)
-        for i in range(start_index + 1):
-            next(csvfile)
+
         for line in csvfile:
+            if not start_found:
+                if line[0] == str(start_index):
+                    start_found = True
+                else:
+                    continue
             part_id = line[1]
             reset_delete()
             valid = import_model(os.path.join(parts_dir, part_id + ".dat"), parts_dir)
